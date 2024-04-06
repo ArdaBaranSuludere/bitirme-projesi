@@ -1,0 +1,77 @@
+
+#views.py
+
+from datetime import datetime
+from flask import render_template, redirect, url_for, request, flash,Flask
+from app import app, db
+from flask_login import current_user, login_required
+from . import app
+from .models import db, User, Blogs
+from flask_login import current_user, login_required
+
+
+
+
+@app.route('/')
+def main():
+    return render_template('main.html')
+
+@app.route('/blog_page')
+def blog_page():
+    return render_template('blog_page.html')
+
+@app.route('/myProfile')
+@login_required
+def my_profile():
+    return render_template('myProfile.html', user=current_user)
+
+@app.route('/upload_profile_image', methods=['POST'])
+def upload_profile_image():
+    if 'image' in request.files:
+        image = request.files['image']
+        if image.filename != '':
+            current_user.save_profile_image(image)
+            flash('Profil resmi başarıyla yüklendi.', 'success')
+        else:
+            flash('Bir resim seçmelisiniz.', 'danger')
+    return redirect(url_for('my_profile'))
+
+@app.route('/delete_profile_image', methods=['POST'])
+def delete_profile_image():
+    current_user.delete_profile_image()
+    flash('Profil resmi başarıyla silindi.', 'success')
+    return redirect(url_for('my_profile'))
+
+
+@app.route('/submit_blog', methods=['GET', 'POST'])
+@login_required  # Sadece oturum açmış kullanıcılar bu görünüme erişebilir
+def submit_blog():
+    if request.method == 'POST':
+        # Formdan gelen verileri al
+        title = request.form['title']
+        subtitle = request.form['subtitle']
+        category = request.form['category']
+        reading_time = request.form['reading_time']
+        content = request.form['content']
+
+        # Oturum açmış olan kullanıcının kimliğini al
+        author_username = current_user.username
+
+        # Kullanıcı adını kullanarak ilgili kullanıcının id'sini al
+        user = User.query.filter_by(username=author_username).first()
+        author_id = user.id
+
+        # Yeni bir blog nesnesi oluştur ve publish_date ve views değerlerini ayarla
+        new_blog = Blogs(title=title, subtitle=subtitle, category=category, reading_time=reading_time,
+                         content=content, author_id=author_id, author_username=author_username,
+                         publish_date=datetime.now(), views=0)
+
+        # Veritabanına ekle ve değişiklikleri kaydet
+        db.session.add(new_blog)
+        db.session.commit()
+
+        # Gönderim işlemi tamamlandıktan sonra ana sayfaya yönlendir
+        return redirect(url_for('main'))
+
+    # GET isteği geldiğinde blog gönderme formunu göster
+    return render_template('/blog_submit.html')
