@@ -13,10 +13,6 @@
                 {% if user.photograph %}
                 <img class="rounded-circle mr-2" src="{{ url_for('static', filename='assets/images/user-images/' + current_user.username + '.jpg') }}" width="200" height="200" alt="">
 
-                <form action="{{ url_for('delete_profile_image') }}" method="POST">
-                    <button type="submit">Profil Resmini Sil</button>
-                </form>
-
                 <!-- Kullanıcı resmi yoksa varsayılan resmi göster -->
                 {% else %}
                     <img src="{{ url_for('static', filename='assets/images/default.jpg') }}" alt="Varsayılan Resim" class="img-fluid">

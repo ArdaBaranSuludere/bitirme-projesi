@@ -46,15 +46,7 @@ class User(UserMixin, db.Model):
         # Dosya yolunu veritabanına kaydet
         self.photograph = os.path.join('static', 'assets', 'images', 'user-images', new_filename)
         db.session.commit()  # Veritabanındaki değişiklikleri kaydet
-
-    def delete_profile_image(self):
-        # Kullanıcının profil resmini sil
-        if self.photograph:
-            file_path = os.path.join(current_app.root_path, 'static', 'assets', 'images', 'user-images', self.username, self.photograph)
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            # Dosya yolunu veritabanından kaldır
-            self.photograph = None
+        
 
 # Ara tablo tanımı
 user_fav_blogs = db.Table('user_fav_blogs',
