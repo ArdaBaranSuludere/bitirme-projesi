@@ -1,14 +1,14 @@
-   
+<!-- #navbar.html -->
+
     <a href="#" class="logo">MarBlogs</a>
 
     <nav class="navbar">
         <a href="{{ url_for('main') }}">Ana Sayfa</a>
-        <a href="#">Trendler</a>
         <a href="#">Kaydedilenler</a>
         
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('my_profile') }}">Profilim</a>
-            <a href="{{ url_for('submit_blog') }}">Submit Blog</a>
+            <a href="{{ url_for('submit_blog') }}">Blog Yaz</a>
             <a href="{{ url_for('auth.logout') }}">Logout</a>
 
             <!-- admin panel user admin ise görüncek -->

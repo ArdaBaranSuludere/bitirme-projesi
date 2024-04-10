@@ -1,4 +1,3 @@
-
 #views.py
 
 from datetime import datetime
@@ -9,21 +8,58 @@ from . import app
 from .models import db, User, Blogs
 from flask_login import current_user, login_required
 
-
-
-
 @app.route('/')
 def main():
-    return render_template('main.html')
+    blogs = Blogs.query.all()
 
-@app.route('/blog_page')
-def blog_page():
-    return render_template('blog_page.html')
+   # Her blog için kullanıcı bilgilerini al
+    for blog in blogs:
+        # İlgili kullanıcıyı sorgula
+        user = User.query.filter_by(id=blog.author_id).first()
+        
+        # Kullanıcı bilgilerini blog nesnesine ekle
+        if user:
+            blog.author_username = user.username
+            blog.author_photograph = user.photograph
+    return render_template('main.html', blogs=blogs)
+
+@app.route('/blog/<string:category_name>')
+def category_blogs(category_name):
+    # Belirli bir kategoriye sahip olan diğer blogları bul
+    blogs = Blogs.query.filter_by(category=category_name).all()
+
+     # Her blog için kullanıcı bilgilerini al
+    for blog in blogs:
+        # İlgili kullanıcıyı sorgula
+        user = User.query.filter_by(id=blog.author_id).first()
+        
+        # Kullanıcı bilgilerini blog nesnesine ekle
+        if user:
+            blog.author_username = user.username    
+            blog.author_photograph = user.photograph
+    return render_template('main.html', blogs=blogs)
+
+
+@app.route('/blog/<int:blog_id>')
+def blog_detail(blog_id):
+    # Blogu veritabanından al
+    blog = Blogs.query.get(blog_id)
+    if blog:
+        # Görüntülenme sayısını bir arttır
+        blog.views += 1
+        # Değişiklikleri veritabanına kaydet
+        db.session.commit()
+        return render_template('blog_page.html', blog=blog)
+    else:
+        # Blog bulunamazsa ana sayfaya yönlendir
+        return redirect(url_for('main'))
 
 @app.route('/myProfile')
 @login_required
 def my_profile():
-    return render_template('myProfile.html', user=current_user)
+    # Mevcut kullanıcının user_id'si ile eşleşen bütün blogları al
+    user_blogs = Blogs.query.filter_by(author_id=current_user.id).all()
+    return render_template('myProfile.html', user=current_user, user_blogs=user_blogs)
 
 @app.route('/upload_profile_image', methods=['POST'])
 def upload_profile_image():
@@ -75,3 +111,4 @@ def submit_blog():
 
     # GET isteği geldiğinde blog gönderme formunu göster
     return render_template('/blog_submit.html')
+
