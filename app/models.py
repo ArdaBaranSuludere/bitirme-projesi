@@ -45,7 +45,7 @@ class User(UserMixin, db.Model):
         image.save(file_path)
 
         # Dosya yolunu veritabanına kaydet
-        self.photograph = os.path.join('static', 'assets', 'images', 'user-images', new_filename)
+        self.photograph = os.path.join('/static', 'assets', 'images', 'user-images', new_filename)
         db.session.commit()  # Veritabanındaki değişiklikleri kaydet
         
 
