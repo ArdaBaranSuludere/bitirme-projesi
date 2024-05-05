@@ -1,10 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from flask import current_app
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.utils import secure_filename
 import os
-from sqlalchemy.orm import relationship
 
 class User(UserMixin, db.Model):
     table_args = {'extend_existing': True}
@@ -58,8 +57,6 @@ user_fav_blogs = db.Table('user_fav_blogs',
 class Blogs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # Kullanıcının ID'sini referans alır
-    # author_username = db.Column(db.String(64),db.ForeignKey('user.username'))  # Kullanıcının kullanıcı adını saklar
-    # author_photograph = db.Column(db.String(255),db.ForeignKey('user.photograph'))  # Kullanıcının profil fotoğrafını saklar
     title = db.Column(db.String(100), nullable=False)
     subtitle = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
@@ -67,22 +64,6 @@ class Blogs(db.Model):
     publish_date = db.Column(db.Date, nullable=False)
     views = db.Column(db.Integer, nullable=False)
     content = db.Column(db.String(2000), nullable=False)
-    #   # Kullanıcının kullanıcı adını saklar
-    # author_username = db.Column(db.String(64))
-    # # Kullanıcının profil fotoğrafını saklar
-    # author_photograph = db.Column(db.String(255))
-    # # Author ilişkisi tanımlayın
-    # author = db.relationship('User', foreign_keys=[author_id])
-
-    # def __init__(self, **kwargs):
-    #     super(Blogs, self).__init__(**kwargs)
-    #     # Eğer kullanıcı ilişkisi mevcut değilse ve author_id mevcut ise,
-    #     # author_username ve author_photograph bilgilerini alarak ayarlayın
-    #     if self.author_id and not self.author:
-    #         user = User.query.get(self.author_id)
-    #         self.author = user
-    #         self.author_username = user.username
-    #         self.author_photograph = user.photograph
 
     @property
     def author_username(self):

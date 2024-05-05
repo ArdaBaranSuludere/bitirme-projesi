@@ -30,8 +30,6 @@
 
         <!-- Soldaki %70'lik bölüm -->
         <div class="col-lg-10" style="display: flex; flex-wrap:wrap;" >
-            <!-- En üstteki buton
-            <button class="btn btn-primary mt-3"><a href="{{ url_for('submit_blog') }}" style="color: white; text-decoration: none;">Yeni Blog Ekle</a></button> -->
 
             {% for blog in user_blogs %}
             <!-- Altında birden çok blog eklenmesine izin veren div -->
@@ -44,7 +42,7 @@
                                     href="">{{ blog.category}}</a>
                                 <a class="text-body" href=""><small>{{ blog.publish_date }}</small></a>
                             </div>
-                            <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="">{{ blog.title }}</a>
+                            <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="/blog/{{ blog.id }}">{{ blog.title }}</a>
                             <p class="m-0">{{ blog.subtitle }}</p>
                         </div>
                         <div class="d-flex justify-content-between bg-white border border-top-0 p-4">

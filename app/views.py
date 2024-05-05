@@ -45,14 +45,11 @@ def blog_detail(blog_id):
     # Blogu veritabanından al
     blog = Blogs.query.get(blog_id)
     if blog:
-        # Görüntülenme sayısını bir arttır
-        blog.views += 1
-        # Değişiklikleri veritabanına kaydet
-        db.session.commit()
+        blog.views += 1         # Görüntülenme sayısını bir arttır
+        db.session.commit()     # Değişiklikleri veritabanına kaydet
         return render_template('blog_page.html', blog=blog)
     else:
-        # Blog bulunamazsa ana sayfaya yönlendir
-        return redirect(url_for('main'))
+        return redirect(url_for('main'))    # Blog bulunamazsa ana sayfaya yönlendir
 
 @app.route('/myProfile')
 @login_required
