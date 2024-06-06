@@ -65,8 +65,8 @@
 }
 
 .footer .footer-content .contact-form .contact-input {
-    background: #272727;
-    color: #bebdbd;
+    background: #ffffff;
+    color: #000000;
     margin-bottom: 10px;
     line-height: 1.5rem;
     padding: .9rem 1.4rem;
@@ -74,7 +74,7 @@
 }
 
 .footer .footer-content .contact-form .contact-input:focus{
-    background: #1a1a1a;
+    background: #fffdfdea;
 }
 
 .footer .footer-content .contact-form .contact-btn {
