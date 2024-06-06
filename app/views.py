@@ -5,7 +5,7 @@ from flask import render_template, redirect, url_for, request, flash,Flask
 from app import app, db
 from flask_login import current_user, login_required
 from . import app
-from .models import db, User, Blogs
+from .models import db, User, Blogs, Newsletter
 from flask_login import current_user, login_required
 
 @app.route('/')
@@ -17,6 +17,8 @@ def main():
         # İlgili kullanıcıyı sorgula
         user = User.query.filter_by(id=blog.author_id).first()
         
+        image_url = url_for('static', filename=f'assets/images/blog-photos/{blog.category}.jpg')
+        blog.image_url = image_url
         # Kullanıcı bilgilerini blog nesnesine ekle
         if user:
             blog.author_username = user.username
@@ -47,16 +49,22 @@ def blog_detail(blog_id):
     if blog:
         blog.views += 1         # Görüntülenme sayısını bir arttır
         db.session.commit()     # Değişiklikleri veritabanına kaydet
+        image_url = url_for('static', filename=f'assets/images/blog-photos/{blog.category}.jpg')
+        blog.image_url = image_url
         return render_template('blog_page.html', blog=blog)
     else:
         return redirect(url_for('main'))    # Blog bulunamazsa ana sayfaya yönlendir
+
 
 @app.route('/myProfile')
 @login_required
 def my_profile():
     # Mevcut kullanıcının user_id'si ile eşleşen bütün blogları al
     user_blogs = Blogs.query.filter_by(author_id=current_user.id).all()
+    for blog in user_blogs:
+        blog.image_url = url_for('static', filename=f'assets/images/blog-photos/{blog.category}.jpg')
     return render_template('myProfile.html', user=current_user, user_blogs=user_blogs)
+
 
 @app.route('/upload_profile_image', methods=['POST'])
 def upload_profile_image():
@@ -68,6 +76,7 @@ def upload_profile_image():
         else:
             flash('Bir resim seçmelisiniz.', 'danger')
     return redirect(url_for('my_profile'))
+
 
 @app.route('/delete_profile_image', methods=['POST'])
 def delete_profile_image():
@@ -109,3 +118,14 @@ def submit_blog():
     # GET isteği geldiğinde blog gönderme formunu göster
     return render_template('/blog_submit.html')
 
+
+@app.route('/subscribe_newsletter', methods=['POST'])
+def subscribe_newsletter():
+    email = request.form['email']
+    message = request.form['message']
+    
+    new_subscription = Newsletter(email=email, message=message)
+    db.session.add(new_subscription)
+    db.session.commit()
+    
+    return redirect(url_for('main'))  # Abonelik sonrası yönlendirilecek sayfa
