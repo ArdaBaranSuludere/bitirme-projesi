@@ -1,63 +1,57 @@
+<!-- myProfile.html -->
 {% extends 'base.html' %} {% block title %} My Profile {% endblock %} 
 {% block content %}
 
-<div class="container">
-
+<div class="container" style="display: flex;">
     <div class="row">
-        <!-- Sağdaki %30'luk bölüm -->
-        <div class="col-lg-2">
-            <!-- Profil resmi -->
+        <div class="profile">
             <div class="profile-image">
-                <!-- Kullanıcı resmi varsa göster -->
+
                 {% if user.photograph %}
-                <img class="rounded-circle mr-2" src="{{ url_for('static', filename='assets/images/user-images/' + current_user.username + '.jpg') }}" width="200" height="200" alt="">
-
-                <!-- Kullanıcı resmi yoksa varsayılan resmi göster -->
+                <img class="author-my-photo mr-2" src="{{ url_for('static', filename='assets/images/user-images/' + current_user.username + '.jpg') }}" width="200" height="200" alt="Profil Resmi" />
+                
                 {% else %}
-                    <img src="{{ url_for('static', filename='assets/images/default.jpg') }}" alt="Varsayılan Resim" class="img-fluid">
+                <img src="{{ url_for('static', filename='assets/images/default.jpg') }}" alt="Varsayılan Resim" class="img-fluid">
 
-                    <!-- Profil resmi yükleme butonu -->
-                    <form action="{{ url_for('upload_profile_image') }}" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="image">
-                        <button type="submit">Profil Resmi Yükle</button>
-                    </form>
+                <!-- Profil resmi yükleme butonu -->
+                <form action="{{ url_for('upload_profile_image') }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="image" />
+                    <button type="submit">Profil Resmi Yükle</button>
+                </form>
                 {% endif %}
-                <!-- Kullanıcı adı ve e-posta -->
+    
                 <p>Kullanıcı Adı: {{ user.username }}</p>
                 <p>E-posta: {{ user.email }}</p>
             </div>
         </div>
 
-        <!-- Soldaki %70'lik bölüm -->
-        <div class="col-lg-10" style="display: flex; flex-wrap:wrap;" >
-
-            {% for blog in user_blogs %}
-            <!-- Altında birden çok blog eklenmesine izin veren div -->
-                <div class="col-lg-6">
-                    <div class="position-relative mb-3">
-                        <img class="img-fluid w-100" src="/static/assets/images/news-700x435-1.jpg" style="object-fit: cover;">
-                        <div class="bg-white border border-top-0 p-4">
-                            <div class="mb-2">
-                                <a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2"
-                                    href="">{{ blog.category}}</a>
-                                <a class="text-body" href=""><small>{{ blog.publish_date }}</small></a>
+        <div class="col-lg-10">
+            <div class="col-lg-10">
+                {% for blog in user_blogs %}
+                    <div class="blog-box mb-3">
+                        <img class="blog-img w-100" src="{{blog.image_url}}" alt="Blog" />
+                        <div class="cat-date-container">
+                            <div class="cat-date">
+                                <a href="#" class="category">{{blog.category}}</a>
+                                <a href="#" class="publish-date">{{blog.publish_date}}</a>
                             </div>
-                            <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="/blog/{{ blog.id }}">{{ blog.title }}</a>
-                            <p class="m-0">{{ blog.subtitle }}</p>
+                            <a class="blog-title" href="/blog/{{ blog.id }}">{{blog.title}}</a>
+                            <p class="blog-subtitle">{{blog.subtitle}}</p>
                         </div>
-                        <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
-                            <div class="d-flex align-items-center">
-                                <small class="ml-3"><i class="far fa-eye mr-2"></i>{{ blog.views }}</small>
+                        <div class="author-infos-views">
+                            <div class="author-infos">
+                                <img class="author-photo mr-2" src="{{ user.photograph }}" alt="Author" width="50" height="50" />
+                                <p class="author-name">{{user.username}}</p>
+                            </div>
+                            <div class="views">
+                                <small class="blog-views"><i class="far fa-eye mr-2"></i>{{blog.views}}</small>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 {% endblock %}
