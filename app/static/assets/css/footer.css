@@ -112,4 +112,5 @@
     left: 0px;
     width: 100%;
     z-index: 999; /* Diğer içeriklerin üzerine çıkması için */
+    font-family: "Poppins", sans-serif;
 }
