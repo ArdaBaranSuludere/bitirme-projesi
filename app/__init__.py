@@ -28,13 +28,14 @@ admin = Admin(app, name='Admin', index_view=MyAdminIndexView(), template_mode='b
 
 
 # Model ve View İçe Aktarmaları
-from app.models import User,Blogs
+from app.models import User,Blogs, Newsletter
 from app.auth import auth as auth_blueprint
 
 
 # Admin Paneli
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Blogs, db.session))
+admin.add_view(ModelView(Newsletter, db.session))
 
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 

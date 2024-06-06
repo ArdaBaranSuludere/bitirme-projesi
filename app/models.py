@@ -83,10 +83,15 @@ class Blogs(db.Model):
 
     def __repr__(self):
         return '<Blog {}>'.format(self.title)
+    
 
+class Newsletter(db.Model):
+    __tablename__ = 'Newsletter'
+    __table_args__ = {'extend_existing': True}
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String, nullable=False)
+    message = db.Column(db.String, nullable=False)
 
-# yapılacaklar
-# user tablosuna eklencekler. my_blogs_ids, fav_blogs_id
-# blog okuma sayfasına tıklanınca favorilere eklencek bir ikon lazım.
-
-# forms.py  
+    def __repr__(self):
+        return f'<Newsletter {self.username}>'
