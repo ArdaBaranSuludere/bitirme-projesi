@@ -1,31 +1,28 @@
 {% extends 'base.html' %} {% block title %} main {% endblock %} 
 
 {% block content %}
-    <div class="container-blog">
+    <div class="blog-container">
         {% for blog in blogs %}
-        <div class="col-lg-6">
-            <div class="position-relative mb-3" style="border-radius: 50px 50px 0px 0px; overflow: hidden;">
-                <img class="img-fluid w-100" src="/static/assets/images/news-700x435-1.jpg" style="object-fit: cover;">
-                <div class="bg-white border border-top-0 p-4">
-                    <div class="mb-2">
-                        <a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2"
-                            href="/blog/{{ blog.category }}">{{blog.category}}</a>
-                        <a class="text-body" style="text-decoration: none;" href=""><small>{{blog.publish_date}}</small></a>
+            <div class="blog-box mb-3">
+                <img class="blog-img w-100" src="{{blog.image_url}}" alt="Blog" />
+                <div class="cat-date-container">
+                    <div class="cat-date">
+                        <a href="#" class="category">{{blog.category}}</a>
+                        <a href="#" class="publish-date">{{blog.publish_date}}</a>
                     </div>
-                    <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" style="text-decoration: none; color:rgb(70,70,70);" href="/blog/{{ blog.id }}">{{blog.title}}</a>
-                    <p class="m-0">{{blog.subtitle}}</p>
+                    <a class="blog-title" href="/blog/{{ blog.id }}">{{blog.title}}</a>
+                    <p class="blog-subtitle">{{blog.subtitle}}</p>
                 </div>
-                <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
-                    <div class="d-flex align-items-center">
-                        <img class="rounded-circle mr-2" src="{{ blog.author_photograph }}" width="50" height="50" alt="">
-                        <medium>{{blog.author_username}}</medium>
+                <div class="author-infos-views">
+                    <div class="author-infos">
+                        <img class="author-photo mr-2" src="{{ blog.author_photograph }}" alt="Author" width="50" height="50" />
+                        <p class="author-name">{{blog.author_username}}</p>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <small class="ml-3"><i class="far fa-eye mr-2"></i>{{blog.views}}</small>
+                    <div class="views">
+                        <small class="blog-views"><i class="far fa-eye mr-2"></i>{{blog.views}}</small>
                     </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 {% endblock %}
