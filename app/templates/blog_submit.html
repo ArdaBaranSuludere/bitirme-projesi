@@ -2,42 +2,37 @@
 
 {% block content %}
     
-<div class="blog-submit-form" style="padding-top: 150px;">
-    <h2>Blogunuzu girin.</h2>
-    <form id="submit_blog" action="{{ url_for('submit_blog') }}" method="post">
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <fieldset>
-                    <input name="title" type="text" id="title" placeholder="Title*" required="">
-                </fieldset>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <fieldset>
-                    <input name="subtitle" type="text" id="subtitle" placeholder="Subtitle*" required="">
-                </fieldset>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <fieldset>
-                    <input name="category" type="text" id="category" placeholder="Category*" required="">
-                </fieldset>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <fieldset>
-                    <input name="reading_time" type="text" id="reading_time" placeholder="Reading Time*" required="">
-                </fieldset>
-            </div>
-            <div class="col-lg-12">
-                <fieldset>
-                    <textarea name="content" rows="6" id="content" placeholder="Content*" required=""></textarea>
-                </fieldset>
-            </div>
-            <div class="col-lg-12">
-                <fieldset>
-                    <button type="submit" id="form-submit" class="main-dark-button">Submit Blog</button>
-                </fieldset>
-            </div>
+<div class="write-container">
+    <div class="add">
+        <div class="submit-form">
+            <form method="post" action="{{ url_for('submit_blog') }}">
+                <div class="content">
+                    <input type="text" name="title" placeholder="Title" required />
+                    <input type="text" name="subtitle" placeholder="Subtitle" required />
+                    <input type="text" name="reading_time" placeholder="Reading Time" required />
+                    <div class="editorContainer">
+                        <textarea name="content" class="editor" placeholder="Write your content here..." required></textarea>
+                    </div>
+                </div>
+                <div class="menu">
+                    <div class="item">
+                        <h1>Choose a Category</h1>
+                        {% for category in ["art", "science", "technology", "cinema", "design", "food"] %}
+                            <div class="cat">
+                                <input type="radio" name="category" value="{{ category }}" id="{{ category }}" required />
+                                <label for="{{ category }}">{{ category.capitalize() }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="item">
+                        <div class="buttons">
+                            <button type="submit" name="status" value="publish">Publish</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 {% endblock %}
