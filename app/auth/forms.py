@@ -20,7 +20,6 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email(message='Invalid Email')])
     password = PasswordField('Password', validators=[DataRequired()])
-    pass_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
     submit = SubmitField('Register')
     
     def validate_username(self, username):
@@ -36,10 +35,6 @@ class RegisterForm(FlaskForm):
     def validate_password(self, password):
         if len(password.data) < 8:
             raise ValidationError('Password must be at least 8 characters long')
-        if password.data != self.pass_confirm.data:
-            raise ValidationError('Passwords do not match')
         if not any(char.isdigit() for char in password.data):
             raise ValidationError('Password must contain at least one number')
-    
-
     
