@@ -30,10 +30,13 @@ def category_blogs(category_name):
     # Belirli bir kategoriye sahip olan diğer blogları bul
     blogs = Blogs.query.filter_by(category=category_name).all()
 
+    
      # Her blog için kullanıcı bilgilerini al
     for blog in blogs:
         # İlgili kullanıcıyı sorgula
         user = User.query.filter_by(id=blog.author_id).first()
+        image_url = url_for('static', filename=f'assets/images/blog-photos/{blog.category}.jpg')
+        blog.image_url = image_url
         
         # Kullanıcı bilgilerini blog nesnesine ekle
         if user:
