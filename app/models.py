@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     fav_blogs = db.relationship('Blogs', secondary='user_fav_blogs', backref='favorited_by')
     photograph = db.Column(db.String(255))  # Dosya yolu için String tipinde bir sütun
 
-    def __repr__(self):
+    def _repr_(self):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
@@ -46,7 +46,16 @@ class User(UserMixin, db.Model):
         # Dosya yolunu veritabanına kaydet
         self.photograph = os.path.join('/static', 'assets', 'images', 'user-images', new_filename)
         db.session.commit()  # Veritabanındaki değişiklikleri kaydet
-        
+
+    def delete_profile_image(self):
+        # Profil resmini silmek için
+        user_image_folder = os.path.join(current_app.root_path, 'static', 'assets', 'images', 'user-images')
+        image_path = os.path.join(user_image_folder, f'{self.username}.jpg')
+        if os.path.exists(image_path):
+            os.remove(image_path)
+        self.photograph = None
+        db.session.commit()  # Veritabanındaki değişiklikleri kaydet
+
 
 # Ara tablo tanımı
 user_fav_blogs = db.Table('user_fav_blogs',
@@ -81,17 +90,17 @@ class Blogs(db.Model):
     def author_username(self, username):
         self.author = User.query.filter_by(username=username).first()
 
-    def __repr__(self):
+    def _repr_(self):
         return '<Blog {}>'.format(self.title)
     
 
 class Newsletter(db.Model):
-    __tablename__ = 'Newsletter'
-    __table_args__ = {'extend_existing': True}
+    _tablename_ = 'Newsletter'
+    _table_args_ = {'extend_existing': True}
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String, nullable=False)
     message = db.Column(db.String, nullable=False)
 
-    def __repr__(self):
+    def _repr_(self):
         return f'<Newsletter {self.username}>'
