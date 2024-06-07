@@ -84,8 +84,9 @@ html,body {
 .blog-box {
     width: calc(33.33% - 20px); /* Her bir blog kutusunun genişliği */
     max-width: 350px; /* Maksimum genişlik */
-    margin: 0 10px ; /* Kenar boşlukları */
-    height: 490px;
+    margin: 20px 10px ; /* Kenar boşlukları */
+    height: 500px;
+    max-height: 500px;
     text-align: center;
     position: relative;
 }
@@ -96,7 +97,7 @@ html,body {
 
 .blog-img {
     max-width: 100%;
-    height: auto;
+    height: 200px;
     border-radius: 30px 30px 0px 0px;
     object-fit: cover;
 }
@@ -137,6 +138,14 @@ html,body {
 .publish-date {
     color: #212529;
     text-decoration: none;
+}
+
+.tit-sub {
+    height: 100px;
+    display: flex;;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .blog-title {
