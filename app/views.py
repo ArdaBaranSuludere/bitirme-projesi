@@ -8,6 +8,8 @@ from . import app
 from .models import db, User, Blogs, Newsletter
 from flask_login import current_user, login_required
 
+
+
 @app.route('/')
 def main():
     blogs = Blogs.query.all()
@@ -85,6 +87,52 @@ def upload_profile_image():
 def delete_profile_image():
     current_user.delete_profile_image()
     flash('Profil resmi başarıyla silindi.', 'success')
+    return redirect(url_for('my_profile'))
+
+@app.route('/edit_blog/<int:blog_id>', methods=['GET', 'POST'])
+@login_required
+def edit_blog(blog_id):
+    blog = Blogs.query.get_or_404(blog_id)
+
+    # Sadece blog sahibinin düzenlemesine izin ver
+    if blog.author_id != current_user.id:
+        flash('Bu blog yazısını düzenleme yetkiniz yok.', 'danger')
+        return redirect(url_for('main'))
+
+    if request.method == 'POST':
+        blog.title = request.form['title']
+        blog.subtitle = request.form['subtitle']
+        blog.category = request.form['category']
+        blog.reading_time = request.form['reading_time']
+        blog.content = request.form['content']
+        
+        db.session.commit()
+        flash('Blog yazısı başarıyla güncellendi.', 'success')
+        return redirect(url_for('my_profile'))
+    
+    return render_template('blog_edit.html', blog=blog)
+
+
+@app.route('/delete_blog/<int:blog_id>', methods=['POST' , 'DELETE'])
+@login_required
+def delete_blog(blog_id):
+    blog = Blogs.query.get_or_404(blog_id)
+
+    # Sadece blogun sahibi tarafından silinebilir
+    if blog.author_id != current_user.id:
+        flash('Bu blog yazısını silme yetkiniz yok.', 'danger')
+        return redirect(url_for('main'))
+
+    try:
+        db.session.delete(blog)
+        db.session.commit()
+        flash('Blog başarıyla silindi.', 'success')
+    except:
+        db.session.rollback()
+        flash('Blog silinirken bir hata oluştu. Lütfen tekrar deneyin.', 'error')
+    finally:
+        db.session.close()
+
     return redirect(url_for('my_profile'))
 
 
